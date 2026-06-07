@@ -4,7 +4,7 @@ set -e
 echo "=== Cortex: Building all services ==="
 cd "$(dirname "$0")"
 
-./mvnw clean package -DskipTests -q
+mvn clean package -DskipTests -q
 
 echo ""
 echo "=== Starting all services ==="

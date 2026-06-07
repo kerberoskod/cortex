@@ -64,12 +64,13 @@
 ## Quick Start
 
 ```bash
-# Prerequisites: Java 21+
+# Prerequisites: Java 21+, Maven 3.9+
 
 # Build all services
-./mvnw clean package -DskipTests
+mvn clean package -DskipTests
 
-# Start all services (background)
+# Start all services (background, one terminal per service)
+chmod +x run-all.sh
 ./run-all.sh
 ```
 
@@ -103,7 +104,7 @@ curl -X POST http://localhost:8080/api/orders \
 
 ```bash
 # Run all tests
-./mvnw test
+mvn test
 ```
 
 ## Architecture Decision Records
