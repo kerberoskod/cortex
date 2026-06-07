@@ -36,3 +36,35 @@ spring:
             - Path=/api/notifications/**
           filters:
             - name: JwtAuth
+
+        - id: user-service-swagger
+          uri: http://localhost:8081
+          predicates:
+            - Path=/swagger-ui/user/**, /v3/api-docs/user
+          filters:
+            - RewritePath=/swagger-ui/user/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/v3/api-docs/user, /v3/api-docs
+
+        - id: catalog-service-swagger
+          uri: http://localhost:8082
+          predicates:
+            - Path=/swagger-ui/catalog/**, /v3/api-docs/catalog
+          filters:
+            - RewritePath=/swagger-ui/catalog/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/v3/api-docs/catalog, /v3/api-docs
+
+        - id: order-service-swagger
+          uri: http://localhost:8083
+          predicates:
+            - Path=/swagger-ui/order/**, /v3/api-docs/order
+          filters:
+            - RewritePath=/swagger-ui/order/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/v3/api-docs/order, /v3/api-docs
+
+        - id: notification-service-swagger
+          uri: http://localhost:8084
+          predicates:
+            - Path=/swagger-ui/notification/**, /v3/api-docs/notification
+          filters:
+            - RewritePath=/swagger-ui/notification/(?<segment>.*), /swagger-ui/$\{segment}
+            - RewritePath=/v3/api-docs/notification, /v3/api-docs
