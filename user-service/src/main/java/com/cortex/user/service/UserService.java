@@ -9,6 +9,7 @@ import com.cortex.user.dto.RegisterRequest;
 import com.cortex.user.model.User;
 import com.cortex.user.repository.UserRepository;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
@@ -17,10 +18,12 @@ import java.util.Set;
 public class UserService {
     private final UserRepository userRepository;
     private final ApplicationEventPublisher eventPublisher;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, ApplicationEventPublisher eventPublisher) {
+    public UserService(UserRepository userRepository, ApplicationEventPublisher eventPublisher, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.eventPublisher = eventPublisher;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public AuthResponse register(RegisterRequest request) {
@@ -28,7 +31,8 @@ public class UserService {
             throw new IllegalArgumentException("Email already in use");
         }
 
-        var user = new User(request.getEmail(), request.getPassword(), request.getName(), Set.of("USER"));
+        var hashedPassword = passwordEncoder.encode(request.getPassword());
+        var user = new User(request.getEmail(), hashedPassword, request.getName(), Set.of("USER"));
         user = userRepository.save(user);
 
         var dto = toDTO(user);
@@ -43,7 +47,7 @@ public class UserService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid email or password"));
 
-        if (!user.getPassword().equals(request.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Invalid email or password");
         }
 

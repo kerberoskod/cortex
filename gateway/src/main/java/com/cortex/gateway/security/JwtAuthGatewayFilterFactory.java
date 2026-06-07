@@ -7,6 +7,8 @@ import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFac
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 
 @Component
@@ -16,6 +18,8 @@ public class JwtAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<Jw
         super(Config.class);
     }
 
+    private static final PathMatcher pathMatcher = new AntPathMatcher();
+
     @Override
     public GatewayFilter apply(Config config) {
         return (exchange, chain) -> {
@@ -23,7 +27,7 @@ public class JwtAuthGatewayFilterFactory extends AbstractGatewayFilterFactory<Jw
 
             if (config.excludedPaths != null) {
                 for (var excluded : config.excludedPaths) {
-                    if (path.startsWith(excluded)) {
+                    if (pathMatcher.match(excluded, path)) {
                         return chain.filter(exchange);
                     }
                 }
