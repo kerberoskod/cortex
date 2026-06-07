@@ -1,0 +1,63 @@
+### Register a new user
+POST http://localhost:8080/api/users/register
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "pass123",
+  "name": "Alice"
+}
+
+### Login
+# @name login
+POST http://localhost:8080/api/users/login
+Content-Type: application/json
+
+{
+  "email": "alice@example.com",
+  "password": "pass123"
+}
+
+### Get products (requires token)
+GET http://localhost:8080/api/products
+Authorization: Bearer {{login.response.body.token}}
+
+### Get product by ID
+GET http://localhost:8080/api/products/1
+Authorization: Bearer {{login.response.body.token}}
+
+### Create an order
+POST http://localhost:8080/api/orders
+Authorization: Bearer {{login.response.body.token}}
+Content-Type: application/json
+
+{
+  "items": [
+    {
+      "productId": 1,
+      "productName": "Wireless Headphones",
+      "quantity": 2,
+      "price": 149.99
+    }
+  ]
+}
+
+### Get user orders
+GET http://localhost:8080/api/orders
+Authorization: Bearer {{login.response.body.token}}
+
+### Get order by ID
+GET http://localhost:8080/api/orders/1
+Authorization: Bearer {{login.response.body.token}}
+
+### Ship order
+POST http://localhost:8080/api/orders/1/ship
+Authorization: Bearer {{login.response.body.token}}
+
+### Notification health
+GET http://localhost:8080/api/notifications/health
+Authorization: Bearer {{login.response.body.token}}
+
+### Get user by ID
+GET http://localhost:8080/api/users/1
+Authorization: Bearer {{login.response.body.token}}
