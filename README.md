@@ -61,15 +61,20 @@
 | `UserRegisteredEvent` | User Service | Notification Service |
 | `OrderCreatedEvent` | Order Service | Notification Service |
 
+## Prerequisites
+
+- **Java 21+** — [Download](https://adoptium.net/)
+- **Maven 3.9+** — [Download](https://maven.apache.org/download.cgi)
+- **Environment**: `JWT_SECRET` must be set (or a dev fallback is used with a warning)
+
 ## Quick Start
 
 ```bash
-# Prerequisites: Java 21+, Maven 3.9+
-
 # Build all services
 mvn clean package -DskipTests
 
-# Start all services (background, one terminal per service)
+# Set required env vars and start all services
+export JWT_SECRET="your-strong-secret-key-here"
 chmod +x run-all.sh
 ./run-all.sh
 ```
@@ -103,7 +108,8 @@ curl -X POST http://localhost:8080/api/orders \
 ## Testing
 
 ```bash
-# Run all tests
+# Run all tests (JWT_SECRET env var required)
+export JWT_SECRET="test-secret-key-for-testing"
 mvn test
 ```
 
@@ -117,6 +123,17 @@ Key architectural decisions are documented in `docs/adr/`:
 | [002](docs/adr/002-event-driven-communication.md) | Event-driven communication with Spring Events |
 | [003](docs/adr/003-api-gateway-pattern.md) | API Gateway with centralized JWT auth |
 | [004](docs/adr/004-database-per-service.md) | Database-per-service pattern |
+
+## Environment Variables
+
+| Variable | Default | Service | Description |
+|---|---|---|---|
+| `SERVER_PORT` | `8080` | gateway | Gateway HTTP port |
+| `JWT_SECRET` | *(required)* | gateway | HMAC-SHA256 key for JWT signing (no default in production) |
+| `USER_SERVICE_PORT` | `8081` | user-service | HTTP port |
+| `CATALOG_SERVICE_PORT` | `8082` | catalog-service | HTTP port |
+| `ORDER_SERVICE_PORT` | `8083` | order-service | HTTP port |
+| `NOTIFICATION_SERVICE_PORT` | `8084` | notification-service | HTTP port |
 
 ## Production Ready
 
